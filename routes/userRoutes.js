@@ -1,0 +1,11 @@
+const express = require("express")
+const router = express.Router()
+const userController = require("../controllers/userController")
+router.post("/addfaculty",userController.signup)
+router.post("/login",userController.login)
+router.get("/user",userController.getAllUsers)
+router.get("/faculty",userController.getAllFaculty)
+router.get("/admin",userController.getAllAdmin)
+router.put("/faculty/:id",userController.updateFaculty)
+router.delete("/faculty/:id",userController.deleteFaculty)
+module.exports=router
