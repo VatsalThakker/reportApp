@@ -79,4 +79,13 @@ const updateReport = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-module.exports = { createReport, readAllReport, readReportBySid, readReportById, updateReport, deleteReport }
+const reportByFacultyId = async (req,res) => {
+    try {
+        const reports = await report.find({ faculty_id: req.params.fid }).populate("student_id")
+        
+        res.status(200).json({ data: reports })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+module.exports = { createReport,reportByFacultyId, readAllReport, readReportBySid, readReportById, updateReport, deleteReport }
