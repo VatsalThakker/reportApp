@@ -8,6 +8,7 @@ const createReport = async (req, res) => {
         if (!faculty_id || faculty_id.trim() === "") {
             return res.status(400).json({ message: "faculty_id is required" })
         }
+
         if (!subject || subject.trim() === "") {
             return res.status(400).json({ message: "subject is required" })
         }
@@ -23,6 +24,18 @@ const createReport = async (req, res) => {
         if (!test || test.trim() === "") {
             return res.status(400).json({ message: "test is required" })
         }
+        const existingReport = await report.findOne({
+            student_id,
+            faculty_id,
+            subject
+        });
+
+        if (existingReport) {
+            return res.status(409).json({
+                message: `Report for subject '${subject}' already exists for this student and faculty.`
+            });
+        }
+        
         const reportDetails = await report.create(req.body)
         res.status(201).json({ message: "Report Created successfully", data: reportDetails })
     } catch (error) {

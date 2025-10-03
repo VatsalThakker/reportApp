@@ -8,4 +8,5 @@ router.delete("/student/:id",studentController.deleteStudent)
 router.put("/student/:id",studentController.updateStudent)
 router.post("/search",studentController.search)
 router.get("/sreport/:id",studentController.getStudentReportBySid)
+router.post("/studentlogin",studentController.loginByMoblie)
 module.exports=router

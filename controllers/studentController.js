@@ -53,6 +53,19 @@ const signup = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+const loginByMoblie = async (req, res) => {
+    try {
+        const { contactNo } = req.body
+        const existingUser = await user.findOne({ contactNo })
+        if (!existingUser) {
+            return res.status(404).json({ message: "Invalid credentials" })
+        }
+        existingUser.password = undefined;
+        res.status(200).json({ message: "Login Successfully", user: { id: existingUser._id, email: existingUser.email, firstName: existingUser.firstName } })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
 const search = async (req, res) => {
     try {
         const {name} = req.body;
@@ -116,4 +129,4 @@ const updateStudent = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 }
-module.exports={signup,getAllStudent,getStudentReportBySid,search,getStudentById,updateStudent,deleteStudent}
+module.exports={signup,loginByMoblie,getAllStudent,getStudentReportBySid,search,getStudentById,updateStudent,deleteStudent}
