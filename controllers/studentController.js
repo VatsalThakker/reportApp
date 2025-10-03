@@ -8,6 +8,10 @@ const signup = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: "Email already exists" })
         }
+        const existingUser1 = await student.findOne({ contactNo })
+        if (existingUser1) {
+            return res.status(400).json({ message: "contact No already exists" })
+        }
         if (!firstName || firstName.trim() === "") {
             return res.status(400).json({ message: "first name is required" })
         }
