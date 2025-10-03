@@ -1,7 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const studentController = require("../controllers/studentController")
-router.post("/signup",studentController.signup)
+const upload = require('../utils/upload'); // adjust path if needed
+router.post("/signup", upload.single('profilePic'),studentController.signup)
 router.get("/student",studentController.getAllStudent)
 router.get("/student/:id",studentController.getStudentById)
 router.delete("/student/:id",studentController.deleteStudent)

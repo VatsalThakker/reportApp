@@ -1,3 +1,6 @@
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 const student = require("../models/studentModel")
 const report = require("../models/reportModel")
 const bcrypt = require("bcryptjs")
@@ -5,6 +8,7 @@ const signup = async (req, res) => {
     try {
         const { firstName, lastName, email, gender, password, batch, collegeName, contactNo,branch,profilePicUrl } = req.body;
         const existingUser = await student.findOne({ email })
+
         if (existingUser) {
             return res.status(400).json({ message: "Email already exists" })
         }
