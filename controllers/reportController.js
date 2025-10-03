@@ -24,18 +24,17 @@ const createReport = async (req, res) => {
         if (!test || test.trim() === "") {
             return res.status(400).json({ message: "test is required" })
         }
+        let tmpSubj = subject.toLowerCase();
         const existingReport = await report.findOne({
             student_id,
             faculty_id,
-            subject
+            subject:tmpSubj
         });
-
         if (existingReport) {
             return res.status(409).json({
                 message: `Report for subject '${subject}' already exists for this student and faculty.`
             });
         }
-        subject=subject.lower()
         const reportDetails = await report.create(req.body)
         res.status(201).json({ message: "Report Created successfully", data: reportDetails })
     } catch (error) {
