@@ -1,12 +1,10 @@
-import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
+const cloudinary = require('../config/cloudinaryConfig');
 const student = require("../models/studentModel")
 const report = require("../models/reportModel")
 const bcrypt = require("bcryptjs")
 const signup = async (req, res) => {
     try {
-        const { firstName, lastName, email, gender, password, batch, collegeName, contactNo,branch,profilePicUrl } = req.body;
+        const { firstName, lastName, email, gender, password, batch, collegeName, contactNo,branch } = req.body;
         const existingUser = await student.findOne({ email })
 
         if (existingUser) {
@@ -42,6 +40,10 @@ const signup = async (req, res) => {
         }
         if (!branch || branch.trim() === "") {
             return res.status(400).json({ message: "branch is required" })
+        }
+        let profilePicUrl = null;
+        if (req.file && req.file.path) {
+          profilePicUrl = req.file.path; // Uploaded to cloudinary by multer-storage-cloudinary
         }
         const newUser = await student.create({
             firstName,
