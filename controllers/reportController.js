@@ -35,7 +35,7 @@ const createReport = async (req, res) => {
                 message: `Report for subject '${subject}' already exists for this student and faculty.`
             });
         }
-        
+        subject=subject.lower()
         const reportDetails = await report.create(req.body)
         res.status(201).json({ message: "Report Created successfully", data: reportDetails })
     } catch (error) {
