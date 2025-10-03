@@ -56,7 +56,7 @@ const signup = async (req, res) => {
 const loginByMoblie = async (req, res) => {
     try {
         const { contactNo } = req.body
-        const existingUser = await user.findOne({ contactNo })
+        const existingUser = await student.findOne({ contactNo })
         if (!existingUser) {
             return res.status(404).json({ message: "Invalid credentials" })
         }
