@@ -74,7 +74,7 @@ const updateFaculty = async (req, res) => {
 }
 const getUserById=async (req,res) => {
     try {
-        const facultyDetails = await student.find({_id:req.params.id})
+        const facultyDetails = await user.find({_id:req.params.id})
         res.status(200).json(facultyDetails)
     } catch (error) {
         res.status(500).json({ message: error.message })
