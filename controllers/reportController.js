@@ -59,7 +59,7 @@ const createReport = async (req, res) => {
 
 const readAllReport = async (req, res) => {
     try {
-        const reports = await report.find()
+        const reports = await report.find().populate("faculty_id")
         res.status(200).json({ data: reports })
     } catch (error) {
         res.status(500).json({ message: error.message })
