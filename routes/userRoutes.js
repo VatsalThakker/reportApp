@@ -8,4 +8,5 @@ router.get("/faculty",userController.getAllFaculty)
 router.get("/admin",userController.getAllAdmin)
 router.put("/faculty/:id",userController.updateFaculty)
 router.delete("/faculty/:id",userController.deleteFaculty)
+router.get("/faculty/:id",userController.getUserById)
 module.exports=router

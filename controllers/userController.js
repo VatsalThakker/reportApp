@@ -72,6 +72,14 @@ const updateFaculty = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+const getUserById=async (req,res) => {
+    try {
+        const facultyDetails = await student.find({_id:req.params.id})
+        res.status(200).json(facultyDetails)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
 const deleteFaculty = async (req, res) => {
     try {
             const facultyDetails = await user.findByIdAndDelete(req.params.id)
@@ -110,4 +118,4 @@ const getAllFaculty = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-module.exports = { signup, login, getAllUsers, getAllAdmin, getAllFaculty, updateFaculty, deleteFaculty }
+module.exports = { signup,getUserById, login, getAllUsers, getAllAdmin, getAllFaculty, updateFaculty, deleteFaculty }
