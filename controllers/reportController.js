@@ -12,16 +12,16 @@ const createReport = async (req, res) => {
         if (!subject || subject.trim() === "") {
             return res.status(400).json({ message: "subject is required" })
         }
-        if (!discipline || discipline.trim() === "") {
+        if (!discipline ) {
             return res.status(400).json({ message: "discipline is required" })
         }
-        if (!regularity || regularity.trim() === "") {
+        if (!regularity ) {
             return res.status(400).json({ message: "regularity is required" })
         }
-        if (!communication || communication.trim() === "") {
+        if (!communication ) {
             return res.status(400).json({ message: "communication is required" })
         }
-        if (!test || test.trim() === "") {
+        if (!test ) {
             return res.status(400).json({ message: "test is required" })
         }
         let tmpSubj = subject.toLowerCase();
