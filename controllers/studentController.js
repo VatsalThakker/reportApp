@@ -102,7 +102,7 @@ const getStudentReportBySid = async (req,res) => {
     try {
         
         const studentDetails = await student.find({_id:req.params.id})
-        const reportDetails = await report.find({student_id:req.params.id})
+        const reportDetails = await report.find({student_id:req.params.id}) .populate({path: 'faculty_id',select: 'firstName lastName email'})
         res.status(200).json({studentDetails:studentDetails,reportDetails:reportDetails})
     } catch (error) {
         res.status(500).json({ message: error.message })

@@ -59,12 +59,22 @@ const createReport = async (req, res) => {
 
 const readAllReport = async (req, res) => {
     try {
-        const reports = await report.find().populate("faculty_id")
-        res.status(200).json({ data: reports })
+      const reports = await report.find()
+        .populate({
+          path: 'student_id',
+          select: 'firstName lastName email'
+        })
+        .populate({
+            path: 'faculty_id',
+            select: 'firstName lastName email' // You can add more fields if needed
+          })
+  
+      res.status(200).json({ data: reports });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+      res.status(500).json({ message: error.message });
     }
-}
+  };
+  
 const readReportBySid = async (req, res) => {
     try {
         console.log(req.params.sid)
