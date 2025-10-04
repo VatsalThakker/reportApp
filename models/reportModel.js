@@ -35,6 +35,21 @@ const reportSchema = new mongoose.Schema({
         required: true,
         min:0,
         max:5
-    }  
+    },
+    total:{
+        type:Number,
+        min:0,
+        max:20
+    },
+    per :{
+        type:Number,
+        min:0,
+        max:100
+    },
+    sstatus:{
+        type:String,
+        enum:['excellent','very good','good','need improvement','average']
+    }
 })
+
 module.exports=mongoose.model("report",reportSchema)

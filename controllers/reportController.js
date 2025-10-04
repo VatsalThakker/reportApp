@@ -28,13 +28,28 @@ const createReport = async (req, res) => {
         const existingReport = await report.findOne({
             student_id,
             faculty_id,
-            subject:tmpSubj
+            subject: tmpSubj
         });
         if (existingReport) {
             return res.status(409).json({
                 message: `Report for subject '${subject}' already exists for this student and faculty.`
             });
         }
+        let total = parseInt(discipline) + parseInt(regularity) + parseInt(communication) + parseInt(test)
+        let per = (total / 20) * 100
+        let sstatus=""
+        if (per <= 100 && per>75) {
+            sstatus = "excellent"
+        } else if (per <= 75 && per > 50) {
+            sstatus = "very good"
+        } else if (per <= 50 && per > 25) {
+            sstatus = "good"
+        } else if (per <= 25 && per > 0 ){
+            sstatus = "need improvement"
+        }
+        req.body["total"]=total 
+        req.body["per"]=per 
+        req.body["sstatus"]=sstatus
         const reportDetails = await report.create(req.body)
         res.status(201).json({ message: "Report Created successfully", data: reportDetails })
     } catch (error) {
@@ -62,7 +77,7 @@ const readReportBySid = async (req, res) => {
 
 const readReportById = async (req, res) => {
     try {
-        const reports = await report.find({_id:req.params.id})
+        const reports = await report.find({ _id: req.params.id })
         res.status(200).json({ data: reports })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -91,13 +106,13 @@ const updateReport = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-const reportByFacultyId = async (req,res) => {
+const reportByFacultyId = async (req, res) => {
     try {
         const reports = await report.find({ faculty_id: req.params.fid }).populate("student_id")
-        
+
         res.status(200).json({ data: reports })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
 }
-module.exports = { createReport,reportByFacultyId, readAllReport, readReportBySid, readReportById, updateReport, deleteReport }
+module.exports = { createReport, reportByFacultyId, readAllReport, readReportBySid, readReportById, updateReport, deleteReport }
