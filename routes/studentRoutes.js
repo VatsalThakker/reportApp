@@ -10,4 +10,5 @@ router.put("/student/:id",studentController.updateStudent)
 router.post("/search",studentController.search)
 router.get("/sreport/:id",studentController.getStudentReportBySid)
 router.post("/studentlogin",studentController.loginByMoblie)
+router.put('/update-photo/:id', upload.single('photo'), studentController.updateStudentPhoto);
 module.exports=router

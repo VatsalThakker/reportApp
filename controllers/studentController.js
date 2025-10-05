@@ -116,6 +116,33 @@ const getAllStudent = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+const updateStudentPhoto = async (req, res) => {
+    try {
+      const studentId = req.params.id;
+      if (!req.file || !req.file.path) {
+        return res.status(400).json({ message: "No photo uploaded" });
+      }
+      const studentDetails = await student.findById(studentId);
+      if (!studentDetails) {
+        return res.status(404).json({ message: "Student not found" });
+      }
+     if (studentDetails.profilePicUrl && studentDetails.profilePicUrl.includes('res.cloudinary.com')) {
+        const parts = studentDetails.profilePicUrl.split('/');
+        const publicIdWithExtension = parts[parts.length - 1];
+        const publicId = `students/${publicIdWithExtension.split('.')[0]}`; // folder + public_id
+        await cloudinary.uploader.destroy(publicId); // Remove from Cloudinary
+      }
+      studentDetails.profilePicUrl = req.file.path;
+      await studentDetails.save();
+      res.status(200).json({
+        message: "Profile photo updated successfully",
+        data: studentDetails
+      }); 
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
 const deleteStudent = async (req, res) => {
     try {
         const studentDetails = await student.findByIdAndDelete(req.params.id)
@@ -139,4 +166,4 @@ const updateStudent = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 }
-module.exports={signup,loginByMoblie,getAllStudent,getStudentReportBySid,search,getStudentById,updateStudent,deleteStudent}
+module.exports={signup,updateStudentPhoto,loginByMoblie,getAllStudent,getStudentReportBySid,search,getStudentById,updateStudent,deleteStudent}
