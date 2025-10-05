@@ -66,7 +66,7 @@ const readAllReport = async (req, res) => {
         })
         .populate({
             path: 'faculty_id',
-            select: 'firstName lastName email' // You can add more fields if needed
+            select: 'firstName lastName email' 
           })
   
       res.status(200).json({ data: reports });
@@ -78,7 +78,8 @@ const readAllReport = async (req, res) => {
 const readReportBySid = async (req, res) => {
     try {
         console.log(req.params.sid)
-        const reports = await report.find({ student_id: req.params.sid }) .populate({
+        const reports = await report.find({ student_id: req.params.sid }) 
+        .populate({
             path: 'student_id',
             select: 'firstName lastName email'
           })
@@ -94,7 +95,8 @@ const readReportBySid = async (req, res) => {
 
 const readReportById = async (req, res) => {
     try {
-        const reports = await report.find({ _id: req.params.id }) .populate({
+        const reports = await report.find({ _id: req.params.id }) 
+        .populate({
             path: 'student_id',
             select: 'firstName lastName email'
           })
