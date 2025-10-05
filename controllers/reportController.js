@@ -50,6 +50,7 @@ const createReport = async (req, res) => {
         req.body["total"]=total 
         req.body["per"]=per 
         req.body["sstatus"]=sstatus
+        req.body["subject"]=tmpSubj
         const reportDetails = await report.create(req.body)
         res.status(201).json({ message: "Report Created successfully", data: reportDetails })
     } catch (error) {
@@ -102,7 +103,7 @@ const readReportById = async (req, res) => {
           })
           .populate({
               path: 'faculty_id',
-              select: 'firstName lastName email' // You can add more fields if needed
+              select: 'firstName lastName email'
             })
         res.status(200).json({ data: reports })
     } catch (error) {
