@@ -1,4 +1,5 @@
 const report = require("../models/reportModel")
+const mongoose = require("mongoose")
 const createReport = async (req, res) => {
     try {
         const { student_id, faculty_id, subject, discipline, regularity, communication, test } = req.body
@@ -135,16 +136,40 @@ const updateReport = async (req, res) => {
 }
 const reportByFacultyId = async (req, res) => {
     try {
-        const reports = await report.find({ faculty_id: req.params.fid }).populate("student_id") .populate({
-            path: 'student_id',
-            select: 'firstName lastName email'
-          })
-          .populate({
-              path: 'faculty_id',
-              select: 'firstName lastName email' // You can add more fields if needed
-            })
+        const uniqueStudents = await report.aggregate([
+            {
+              $match: {
+                faculty_id: new mongoose.Types.ObjectId(req.params.fid)
+              }
+            },
+            {
+              $group: {
+                _id: "$student_id"
+              }
+            },
+            {
+              $lookup: {
+                from: "students", // Your actual collection name (check MongoDB for correct name)
+                localField: "_id",
+                foreignField: "_id",
+                as: "student"
+              }
+            },
+            {
+              $unwind: "$student"
+            },
+            {
+              $project: {
+                _id: "$student._id",
+                firstName: "$student.firstName",
+                lastName: "$student.lastName",
+                email: "$student.email"
+              }
+            }
+          ]);
+          
 
-        res.status(200).json({ data: reports })
+        res.status(200).json({ data: uniqueStudents })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
