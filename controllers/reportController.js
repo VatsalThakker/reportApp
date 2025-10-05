@@ -125,15 +125,55 @@ const deleteReport = async (req, res) => {
 }
 const updateReport = async (req, res) => {
     try {
-        const reportDetails = await report.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        if (!reportDetails) {
-            res.status(404).json({ message: "Report not Found" })
+        const { discipline, regularity, communication, test } = req.body;
+
+        // Fetch the existing report first
+        const existingReport = await report.findById(req.params.id);
+        if (!existingReport) {
+            return res.status(404).json({ message: "Report not found" });
         }
-        res.status(200).json({ message: "Report update successfully", data: reportDetails })
+
+        // If scoring fields are being updated, recalculate derived values
+        const shouldRecalculate = [discipline, regularity, communication, test].some(field => field !== undefined);
+
+        if (shouldRecalculate) {
+            const toNumber = (val) => Number(val) || 0;
+
+            const newDiscipline = discipline !== undefined ? toNumber(discipline) : toNumber(existingReport.discipline);
+            const newRegularity = regularity !== undefined ? toNumber(regularity) : toNumber(existingReport.regularity);
+            const newCommunication = communication !== undefined ? toNumber(communication) : toNumber(existingReport.communication);
+            const newTest = test !== undefined ? toNumber(test) : toNumber(existingReport.test);
+
+            const total = newDiscipline + newRegularity + newCommunication + newTest;
+            const per = (total / 20) * 100;
+
+            const getStatus = (per) => {
+                if (per > 75) return "excellent";
+                if (per > 50) return "very good";
+                if (per > 25) return "good";
+                return "need improvement";
+            };
+
+            const sstatus = getStatus(per);
+
+            // Add calculated fields to req.body to update
+            req.body.total = total;
+            req.body.per = per;
+            req.body.sstatus = sstatus;
+        }
+
+        // Update the report
+        const updatedReport = await report.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+        res.status(200).json({
+            message: "Report updated successfully",
+            data: updatedReport
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
 const reportByFacultyId = async (req, res) => {
     try {
         const uniqueStudents = await report.aggregate([
