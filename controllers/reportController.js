@@ -78,7 +78,14 @@ const readAllReport = async (req, res) => {
 const readReportBySid = async (req, res) => {
     try {
         console.log(req.params.sid)
-        const reports = await report.find({ student_id: req.params.sid })
+        const reports = await report.find({ student_id: req.params.sid }) .populate({
+            path: 'student_id',
+            select: 'firstName lastName email'
+          })
+          .populate({
+              path: 'faculty_id',
+              select: 'firstName lastName email'
+            })
         res.status(200).json({ data: reports })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -87,7 +94,14 @@ const readReportBySid = async (req, res) => {
 
 const readReportById = async (req, res) => {
     try {
-        const reports = await report.find({ _id: req.params.id })
+        const reports = await report.find({ _id: req.params.id }) .populate({
+            path: 'student_id',
+            select: 'firstName lastName email'
+          })
+          .populate({
+              path: 'faculty_id',
+              select: 'firstName lastName email' // You can add more fields if needed
+            })
         res.status(200).json({ data: reports })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -118,7 +132,14 @@ const updateReport = async (req, res) => {
 }
 const reportByFacultyId = async (req, res) => {
     try {
-        const reports = await report.find({ faculty_id: req.params.fid }).populate("student_id")
+        const reports = await report.find({ faculty_id: req.params.fid }).populate("student_id") .populate({
+            path: 'student_id',
+            select: 'firstName lastName email'
+          })
+          .populate({
+              path: 'faculty_id',
+              select: 'firstName lastName email' // You can add more fields if needed
+            })
 
         res.status(200).json({ data: reports })
     } catch (error) {
