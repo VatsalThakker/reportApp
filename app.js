@@ -5,6 +5,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes")
 const studentRoutes = require("./routes/studentRoutes")
 const reportRoutes = require("./routes/reportRoutes")
+const countRoutes = require("./routes/countRoutes")
 dotenv.config({path:"./config/.env"})
 const app = express()
 app.use(express.json())
@@ -12,6 +13,7 @@ app.use(cors());
 app.use('/api',userRoutes)
 app.use('/api',studentRoutes)
 app.use('/api',reportRoutes)
+app.use('/api',countRoutes)
 mongoose.connect(process.env.MONGO_URI)
     .then(()=>{
         console.log('MonogoDB Connected');
