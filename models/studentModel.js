@@ -26,7 +26,7 @@ const studentSchema = new mongoose.Schema({
     branch:{
         type: String,
         required: true,
-        enum:['ahmedabad','gandhinagar','himatnagar']
+        enum:['ahmedabad','gandhinagar','himmatnagar']
     },
     batch: {
         type: String,
