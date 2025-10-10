@@ -215,7 +215,7 @@ const reportByFacultyId = async (req, res) => {
                     branch: "$student.branch",
                     contactNo: "$student.contactNo",
                     profilePicUrl: "$student.profilePicUrl",
-                    createdAt: "$student.createdAt" // Optional: return createdAt
+                    createdAt: "$student.createdAt" 
                 }
             }
         ]);

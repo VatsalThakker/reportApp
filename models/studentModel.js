@@ -44,7 +44,10 @@ const studentSchema = new mongoose.Schema({
     profilePicUrl:{
         type:String,
         default:""
-    } ,
-    timestamps: true  
+    } ,createdAt: {
+        type: Date,
+        default: Date.now
+    }
+    
 })
 module.exports=mongoose.model("student",studentSchema)
