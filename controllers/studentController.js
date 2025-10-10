@@ -124,7 +124,7 @@ const getStudentReportBySid = async (req,res) => {
 }
 const getAllStudent = async (req, res) => {
     try {
-        const students = await student.find()
+        const students = await student.find().sort({ createdAt: -1 })
         res.status(200).json({ success: true, count: students.length, data: students })
     } catch (error) {
         res.status(500).json({ message: error.message })

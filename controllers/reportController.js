@@ -178,46 +178,52 @@ const reportByFacultyId = async (req, res) => {
     try {
         const uniqueStudents = await report.aggregate([
             {
-              $match: {
-                faculty_id: new mongoose.Types.ObjectId(req.params.fid)
-              }
+                $match: {
+                    faculty_id: new mongoose.Types.ObjectId(req.params.fid)
+                }
             },
             {
-              $group: {
-                _id: "$student_id"
-              }
+                $group: {
+                    _id: "$student_id"
+                }
             },
             {
-              $lookup: {
-                from: "students", // Your actual collection name (check MongoDB for correct name)
-                localField: "_id",
-                foreignField: "_id",
-                as: "student"
-              }
+                $lookup: {
+                    from: "students", // Make sure this is the actual collection name in MongoDB
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "student"
+                }
             },
             {
-              $unwind: "$student"
+                $unwind: "$student"
             },
             {
-              $project: {
-                _id: "$student._id",
-                firstName: "$student.firstName",
-                lastName: "$student.lastName",
-                email: "$student.email",
-                gender:"$student.gender",
-                batch:"$student.batch",
-                collegeName:"$student.collegeName",
-                branch:"$student.branch",
-                contactNo:"$student.contactNo",
-                profilePicUrl:"$student.profilePicUrl"
-              }
+                $sort: {
+                    "student.createdAt": -1 // ✅ Sort by student's createdAt (descending)
+                }
+            },
+            {
+                $project: {
+                    _id: "$student._id",
+                    firstName: "$student.firstName",
+                    lastName: "$student.lastName",
+                    email: "$student.email",
+                    gender: "$student.gender",
+                    batch: "$student.batch",
+                    collegeName: "$student.collegeName",
+                    branch: "$student.branch",
+                    contactNo: "$student.contactNo",
+                    profilePicUrl: "$student.profilePicUrl",
+                    createdAt: "$student.createdAt" // Optional: return createdAt
+                }
             }
-          ]);
-          
+        ]);
 
-        res.status(200).json({ data: uniqueStudents })
+        res.status(200).json({ data: uniqueStudents });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
 module.exports = { createReport, reportByFacultyId, readAllReport, readReportBySid, readReportById, updateReport, deleteReport }
