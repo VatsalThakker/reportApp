@@ -44,6 +44,7 @@ const studentSchema = new mongoose.Schema({
     profilePicUrl:{
         type:String,
         default:""
-    }  
+    } ,
+    timestamps: true  
 })
 module.exports=mongoose.model("student",studentSchema)
