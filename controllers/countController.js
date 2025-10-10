@@ -7,6 +7,7 @@ const count = async (req,res) => {
         const userCount = await user.countDocuments()
         const studentCount = await student.countDocuments()
         const reportCount = await report.countDocuments({faculty_id:req.params.fid})
+        const totalReportCount = await report.countDocuments()
         const uniqueStudents = await report.aggregate([
                     {
                       $match: {
@@ -39,7 +40,7 @@ const count = async (req,res) => {
                     }
                   ]);
         const mystudentCount = uniqueStudents.length
-        res.status(200).json({student:studentCount,mystudent:mystudentCount,report:reportCount})
+        res.status(200).json({student:studentCount,mystudent:mystudentCount,report:reportCount,totalReportCount:totalReportCount})
 
     } catch (error) {
         res.status(500).json({ message: error.message })
