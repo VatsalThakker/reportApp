@@ -103,7 +103,21 @@ const getStudentReportBySid = async (req,res) => {
         
         const studentDetails = await student.find({_id:req.params.id})
         const reportDetails = await report.find({student_id:req.params.id}) .populate({path: 'faculty_id',select: 'firstName lastName email'})
-        res.status(200).json({studentDetails:studentDetails,reportDetails:reportDetails})
+        const subjectCount = reportDetails.length
+        const totalPercentage = reportDetails.reduce((sum, r) => sum + (r.per || 0), 0);
+        const overallPercentage = subjectCount > 0 ? (totalPercentage / subjectCount).toFixed(2) : 0;
+
+        const getStatus = (overallPercentage) => {
+            if (overallPercentage > 75) return "excellent";
+            if (overallPercentage > 50) return "very good";
+            if (overallPercentage > 25) return "good";
+            return "need improvement";
+        };
+
+        const status = getStatus(parseFloat(overallPercentage));
+
+
+        res.status(200).json({studentDetails:studentDetails,reportDetails:reportDetails,subjectCount:subjectCount,overallPercentage:overallPercentage,status:status})
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
