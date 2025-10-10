@@ -114,10 +114,10 @@ const getStudentReportBySid = async (req,res) => {
             return "need improvement";
         };
 
-        const status = getStatus(parseFloat(overallPercentage));
+        const sstatus = getStatus(parseFloat(overallPercentage));
 
 
-        res.status(200).json({studentDetails:studentDetails,reportDetails:reportDetails,subjectCount:subjectCount,overallPercentage:overallPercentage,status:status})
+        res.status(200).json({studentDetails:studentDetails,reportDetails:reportDetails,subjectCount:subjectCount,overallPercentage:overallPercentage,sstatus:sstatus})
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
