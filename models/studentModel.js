@@ -44,6 +44,6 @@ const studentSchema = new mongoose.Schema({
     profilePicUrl:{
         type:String,
         default:""
-    }
+    }  
 })
 module.exports=mongoose.model("student",studentSchema)

@@ -203,7 +203,12 @@ const reportByFacultyId = async (req, res) => {
                 _id: "$student._id",
                 firstName: "$student.firstName",
                 lastName: "$student.lastName",
-                email: "$student.email"
+                email: "$student.email",
+                gender:"$student.gender",
+                batch:"$student.batch",
+                college:"$student.collegeName",
+                branch:"$student.branch",
+                contact:"$student.contactNo"
               }
             }
           ]);
