@@ -9,27 +9,27 @@ const createReport = async (req, res) => {
         if (!faculty_id || faculty_id.trim() === "") {
             return res.status(400).json({ message: "faculty_id is required" })
         }
-
         if (!subject || subject.trim() === "") {
             return res.status(400).json({ message: "subject is required" })
         }
-        if (!discipline ) {
+        if (!discipline || discipline == null) {
             return res.status(400).json({ message: "discipline is required" })
         }
-        if (!regularity ) {
+        if (!regularity || regularity == null) {
             return res.status(400).json({ message: "regularity is required" })
         }
-        if (!communication ) {
+        if (!communication || communication == null) {
             return res.status(400).json({ message: "communication is required" })
         }
-        if (!test ) {
+        if (!test || test == null) {
             return res.status(400).json({ message: "test is required" })
         }
         let tmpSubj = subject.toLowerCase();
+        req.body["subject"] = tmpSubj
         const existingReport = await report.findOne({
             student_id,
             faculty_id,
-            subject: tmpSubj
+            subject
         });
         if (existingReport) {
             return res.status(409).json({
@@ -38,20 +38,16 @@ const createReport = async (req, res) => {
         }
         let total = parseInt(discipline) + parseInt(regularity) + parseInt(communication) + parseInt(test)
         let per = (total / 20) * 100
-        let sstatus=""
-        if (per <= 100 && per>75) {
-            sstatus = "excellent"
-        } else if (per <= 75 && per > 50) {
-            sstatus = "very good"
-        } else if (per <= 50 && per > 25) {
-            sstatus = "good"
-        } else if (per <= 25 && per > 0 ){
-            sstatus = "need improvement"
-        }
-        req.body["total"]=total 
-        req.body["per"]=per 
-        req.body["sstatus"]=sstatus
-        req.body["subject"]=tmpSubj
+        let sstatus = ""
+        if (per > 75) sstatus = "excellent";
+        else if (per > 50) sstatus = "very good";
+        else if (per > 25) sstatus = "good";
+        else if (per > 0) sstatus = "need improvement";
+        else sstatus = "average";
+        req.body["total"] = total
+        req.body["per"] = per
+        req.body["sstatus"] = sstatus
+
         const reportDetails = await report.create(req.body)
         res.status(201).json({ message: "Report Created successfully", data: reportDetails })
     } catch (error) {
@@ -61,33 +57,33 @@ const createReport = async (req, res) => {
 
 const readAllReport = async (req, res) => {
     try {
-      const reports = await report.find()
-        .populate({
-          path: 'student_id',
-          select: 'firstName lastName email'
-        })
-        .populate({
-            path: 'faculty_id',
-            select: 'firstName lastName email' 
-          })
-  
-      res.status(200).json({ data: reports });
+        const reports = await report.find()
+            .populate({
+                path: 'student_id',
+                select: 'firstName lastName email'
+            })
+            .populate({
+                path: 'faculty_id',
+                select: 'firstName lastName email'
+            })
+
+        res.status(200).json({ data: reports });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
-  };
-  
+};
+
 const readReportBySid = async (req, res) => {
     try {
         console.log(req.params.sid)
-        const reports = await report.find({ student_id: req.params.sid }) 
-        .populate({
-            path: 'student_id',
-            select: 'firstName lastName email'
-          })
-          .populate({
-              path: 'faculty_id',
-              select: 'firstName lastName email'
+        const reports = await report.find({ student_id: req.params.sid })
+            .populate({
+                path: 'student_id',
+                select: 'firstName lastName email'
+            })
+            .populate({
+                path: 'faculty_id',
+                select: 'firstName lastName email'
             })
         res.status(200).json({ data: reports })
     } catch (error) {
@@ -97,14 +93,14 @@ const readReportBySid = async (req, res) => {
 
 const readReportById = async (req, res) => {
     try {
-        const reports = await report.find({ _id: req.params.id }) 
-        .populate({
-            path: 'student_id',
-            select: 'firstName lastName email'
-          })
-          .populate({
-              path: 'faculty_id',
-              select: 'firstName lastName email'
+        const reports = await report.find({ _id: req.params.id })
+            .populate({
+                path: 'student_id',
+                select: 'firstName lastName email'
+            })
+            .populate({
+                path: 'faculty_id',
+                select: 'firstName lastName email'
             })
         res.status(200).json({ data: reports })
     } catch (error) {
@@ -215,7 +211,7 @@ const reportByFacultyId = async (req, res) => {
                     branch: "$student.branch",
                     contactNo: "$student.contactNo",
                     profilePicUrl: "$student.profilePicUrl",
-                    createdAt: "$student.createdAt" 
+                    createdAt: "$student.createdAt"
                 }
             }
         ]);
