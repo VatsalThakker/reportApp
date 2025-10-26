@@ -65,7 +65,7 @@ const readAllReport = async (req, res) => {
             .populate({
                 path: 'faculty_id',
                 select: 'firstName lastName email'
-            })
+            }).populate({path:'subject'})
 
         res.status(200).json({ data: reports });
     } catch (error) {
