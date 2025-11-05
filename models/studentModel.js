@@ -51,3 +51,5 @@ const studentSchema = new mongoose.Schema({
     
 })
 module.exports=mongoose.model("student",studentSchema)
+
+//fix 
