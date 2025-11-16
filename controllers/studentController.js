@@ -82,7 +82,16 @@ const search = async (req, res) => {
         const users = await student.find({
             $or: [
                 { firstName: { $regex: name, $options: "i" } },
-                { lastName: { $regex: name, $options: "i" } }
+                { lastName: { $regex: name, $options: "i" } }, 
+                {
+                    $expr: {
+                        $regexMatch: {
+                            input: { $concat: ["$firstName", " ", "$lastName"] },
+                            regex: name,
+                            options: "i"
+                        }
+                    }
+                }
             ]
         });
         res.status(200).json(users)
